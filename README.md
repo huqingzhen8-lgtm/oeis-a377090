@@ -7,7 +7,7 @@ Complete unconditional proofs and an exact rational-arithmetic counterexample ce
 The sequence **A377090** starts at $a_0 = 0$. For each $n \ge 1$, $a_n$ is the unvisited integer of smallest absolute value such that $|a_n - a_{n-1}|$ is prime, breaking ties in favor of the positive integer.
 
 - **Sloane's Surjectivity Conjecture (Apr 30, 2025):** Every integer eventually appears in A377090.
-- **Hasler's Logarithmic Deviation Conjecture (Feb 2025):** Letting $\delta_n := \bigl||a_n| - n/2\bigr|$, it was conjectured that $\delta_n = O(\log n)$ and specifically $\delta_n < 2\log(n+2)$ for all $n \ge 0$ (verified empirically up to $n = 10^5$).
+- **Hasler's Logarithmic Deviation Conjecture (Feb 21, 2025):** Letting $\delta_n := \bigl||a_n| - n/2\bigr|$, it was conjectured that $\delta_n = O(\log n)$ and specifically $\delta_n < 2\log(n+2)$ for all $n \ge 0$ (verified empirically up to $n = 10^5$).
 
 ## Main Results
 
@@ -84,4 +84,4 @@ tectonic a377090_proof.tex
 
 ## Acknowledgments and AI Disclosure
 
-This repository was initiated, curated, and released by **Qingzhen Hu**. The proof constructions, English exposition, LaTeX typesetting, and computational verification scripts were generated with AI assistance throughout. All analytic and combinatorial arguments are self-contained and verifiable line by line, and the earliest numerical counterexample is certified independently in exact rational arithmetic via `verify_a377090.py`.
+This repository was initiated, curated, and released by **Qingzhen Hu**. The proof constructions, English exposition, LaTeX typesetting, and computational verification scripts were generated with AI assistance throughout. All arguments in the paper are written out in full and verifiable line by line (modulo standard cited results in analytic number theory), and the earliest numerical counterexample is certified independently in exact rational arithmetic via `verify_a377090.py`.

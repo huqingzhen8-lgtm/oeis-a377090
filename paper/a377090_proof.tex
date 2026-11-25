@@ -139,7 +139,7 @@
 \vspace{0.5em}
 
 \noindent{\small\textbf{\sffamily\color{ink}Abstract.}\enspace
-The integer sequence \href{https://oeis.org/A377090}{OEIS A377090} starts at $a_0 = 0$ and selects at each step $n \ge 1$ the unvisited integer $a_n$ of smallest absolute value whose distance $|a_n - a_{n-1}|$ from the previous term is prime, breaking ties in favor of the positive candidate. N.~J.~A.~Sloane conjectured on April~30, 2025 that this greedy walk visits every integer, while M.~F.~Hasler conjectured in February~2025 that $\de_n := \bigl||a_n| - n/2\bigr| = O(\log n)$ and specifically $\de_n < 2\log(n+2)$ for all $n \ge 0$ (verified up to $n \le 10^5$). We prove unconditionally that Sloane's surjectivity conjecture holds, with a quantitative prefix coverage lower bound $k_n \ge c_1 n / (\log n)^4$, whereas Hasler's logarithmic bound fails infinitely often: $\limsup_{n\to\infty}\de_n/\log(n+2) = \infty$. We also certify using exact rational arithmetic that the earliest counterexample to $\de_n < 2\log(n+2)$ occurs at $n = 370313$, where $a_n = -185183$ and $\de_n = 26.5$. Throughout this paper, $\log$ denotes the natural logarithm. The proofs of Theorems~\ref{thm:ergodic}, \ref{thm:prefix}, and the asymptotic part of Theorem~\ref{thm:gap} are purely analytic and combinatorial, relying on no numerical computation.}
+The integer sequence \href{https://oeis.org/A377090}{OEIS A377090} starts at $a_0 = 0$ and selects at each step $n \ge 1$ the unvisited integer $a_n$ of smallest absolute value whose distance $|a_n - a_{n-1}|$ from the previous term is prime, breaking ties in favor of the positive candidate. N.~J.~A.~Sloane conjectured on April~30, 2025 that this greedy walk visits every integer, while M.~F.~Hasler conjectured on February~21, 2025 that $\de_n := \bigl||a_n| - n/2\bigr| = O(\log n)$ and specifically $\de_n < 2\log(n+2)$ for all $n \ge 0$ (verified up to $n \le 10^5$). We prove unconditionally that Sloane's surjectivity conjecture holds, with a quantitative prefix coverage lower bound $k_n \ge c_1 n / (\log n)^4$, whereas Hasler's logarithmic bound fails infinitely often: $\limsup_{n\to\infty}\de_n/\log(n+2) = \infty$. We also certify using exact rational arithmetic that the earliest counterexample to $\de_n < 2\log(n+2)$ occurs at $n = 370313$, where $a_n = -185183$ and $\de_n = 26.5$. Throughout this paper, $\log$ denotes the natural logarithm. The proofs of Theorems~\ref{thm:ergodic}, \ref{thm:prefix}, and the asymptotic part of Theorem~\ref{thm:gap} are purely analytic and combinatorial, relying on no numerical computation.}
 
 \begin{accentbox}{Main Results}
 \begin{theorem}[Surjectivity onto $\Z$]\label{thm:ergodic}
@@ -216,7 +216,7 @@ For every even $m \in [X/2, X]$, there are $\gg X$ pairs $(u,v)$ with $u+v=m$ an
 \[
   \mathfrak{S}(m) = 2\prod_{p>2}\left(1 - \frac{1}{(p-1)^2}\right)\prod_{\substack{p \mid m \\ p>2}}\frac{p-1}{p-2} \ge 2\prod_{p>2}\left(1 - \frac{1}{(p-1)^2}\right) > 0,
 \]
-with products over odd primes (the factor $2$ accounts for ordered pairs). Hence there exists an absolute constant $c_0 > 0$ such that $J(m)\mathfrak{S}(m) \ge 2c_0 X/(\log X)^2$ for all sufficiently large $X$ and all even $m \in [X/2, X]$. Setting $c := c_0$ (independent of $A$), each even $m \in [X/2, X]$ violating~\eqref{eq:goldbach-lb} contributes at least $\bigl(cX/(\log X)^2\bigr)^2 \gg X^2/(\log X)^4$ to the mean-square sum. Taking $B := A + 4$ shows that at most $O_A\bigl(X/(\log X)^A\bigr)$ exceptional even integers can occur in $[X/2, X]$.
+with products over odd primes (where the factor $2$ is the local parity factor at $p = 2$ for even $m$). Hence there exists an absolute constant $c_0 > 0$ such that $J(m)\mathfrak{S}(m) \ge 2c_0 X/(\log X)^2$ for all sufficiently large $X$ and all even $m \in [X/2, X]$. Setting $c := c_0$ (independent of $A$), each even $m \in [X/2, X]$ violating~\eqref{eq:goldbach-lb} contributes at least $\bigl(cX/(\log X)^2\bigr)^2 \gg X^2/(\log X)^4$ to the mean-square sum. Taking $B := A + 4$ shows that at most $O_A\bigl(X/(\log X)^A\bigr)$ exceptional even integers can occur in $[X/2, X]$.
 \end{proof}
 
 \section{Proof of Theorem~\ref{thm:ergodic}: Two-Hop Goldbach Bridges and Infinite Descent}
@@ -265,7 +265,7 @@ Thus $\{|a_n|\}_{n \ge N_0}$ would be an infinite strictly decreasing sequence o
 
 \section{Independent Proof of Theorem~\ref{thm:prefix}: Quantitative Prefix Coverage}
 
-Throughout this section we work strictly inside a finite prefix $S := S_n = \{a_0, \ldots, a_n\}$ ($n \ge 2$) without appealing to Theorem~\ref{thm:ergodic}. Thus the proof below both quantifies the coverage rate and provides a self-contained alternative proof of surjectivity.
+Throughout this section we work strictly inside a finite prefix $S := S_n = \{a_0, \ldots, a_n\}$ ($n \ge 2$) without appealing to Theorem~\ref{thm:ergodic}. Thus the proof below both quantifies the coverage rate and provides an independent alternative proof of surjectivity.
 
 \begin{lemma}[Control of the Maximum Prefix Radius]\label{lem:max-radius}
 For $n \ge 2$, let $M := \max_{y \in S} |y|$. Then
@@ -302,7 +302,7 @@ Fix an absolute constant $C \ge 6$ large enough that $\frac{1}{2}cC > 4$ and $\f
 \]
 Let $x := a_j$ be any starting term with $j < n$ and $|x| \ge T$ (if $T > M$, no such index $j$ exists and Step~3 holds trivially). Pick $b \in \{h, h'\}$ of the same parity as $x$. Because $|b| \le K < T \le |x| \le M$, the difference $m := |x - b|$ is a positive even integer satisfying
 \[
-  \frac{|x|}{2} \le |x| - K < m \le |x| + K < 2|x| \le 2M,
+  \frac{|x|}{2} \le |x| - K \le m \le |x| + K < 2|x| \le 2M,
 \]
 and in particular $m \ge T/2$. If $m$ is non-exceptional, then $r(m) > 4K + 2$. Let $U(m)$ denote the number of \textbf{unordered} prime pairs $\{u, v\}$ with $u + v = m$. Since at most one diagonal pair $u = v = m/2$ can occur, $r(m) \le 2U(m)$, so $U(m) > 2K + 1$. Taking the smaller summand $u \le m/2$ from each unordered pair gives more than $2K + 1$ distinct integers
 \[
@@ -407,7 +407,7 @@ $370318$ & $+185187$ & $370373$ & $28.0$ & $25.64424555$ & Sign flip (step $= q$
 
 \section*{Acknowledgments and AI Disclosure}
 
-This work was initiated, curated, and released by Qingzhen Hu. In the spirit of full transparency, the proof constructions, English exposition, \LaTeX{} typesetting, and computational verification scripts were generated with AI assistance throughout. All analytic and combinatorial arguments in the manuscript are self-contained and formally verifiable line by line, and the earliest numerical counterexample is independently certified in exact rational arithmetic by the accompanying script \texttt{verify\_a377090.py}.
+This work was initiated, curated, and released by Qingzhen Hu. In the spirit of full transparency, the proof constructions, English exposition, \LaTeX{} typesetting, and computational verification scripts were generated with AI assistance throughout. All arguments in the manuscript are written out in full and can be verified line by line (relying only on standard cited theorems from analytic number theory), and the earliest numerical counterexample is independently certified in exact rational arithmetic by the accompanying script \texttt{verify\_a377090.py}.
 
 \begin{thebibliography}{9}
 \small\raggedright
