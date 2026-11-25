@@ -1,0 +1,428 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[top=22mm,bottom=22mm,left=22mm,right=22mm,headheight=22pt,headsep=14pt]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,enumitem,xcolor,fancyhdr,hyperref}
+
+\definecolor{ink}{HTML}{1B365D}
+\definecolor{linkblue}{HTML}{1E5AA8}
+\definecolor{boxbg}{HTML}{F4F7FA}
+\definecolor{rulegray}{HTML}{C8D4E0}
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=linkblue,
+  linkcolor=linkblue,
+  citecolor=linkblue,
+  pdftitle={Surjectivity and Logarithmic Deviation of OEIS A377090},
+  pdfauthor={Qingzhen Hu}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{ink}OEIS A377090}
+\fancyhead[R]{\small\sffamily\color{ink}Surjectivity and Logarithmic Deviation}
+\fancyfoot[C]{\small\sffamily\thepage}
+\renewcommand{\headrulewidth}{0.35pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{rulegray}\leaders\hrule height \headrulewidth\hfill}}
+
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{\z@}%
+  {-2.4ex \@plus -0.5ex \@minus -0.2ex}%
+  {1.0ex \@plus 0.3ex}%
+  {\Large\bfseries\sffamily\color{ink}\raggedright}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+  {-1.6ex \@plus -0.4ex \@minus -0.2ex}%
+  {0.7ex \@plus 0.2ex}%
+  {\large\bfseries\sffamily\color{ink}\raggedright}}
+\makeatother
+
+\linespread{1.07}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.38em}
+\setlength{\abovedisplayskip}{6pt plus 2pt minus 2pt}
+\setlength{\belowdisplayskip}{6pt plus 2pt minus 2pt}
+\setlength{\abovedisplayshortskip}{3.5pt plus 1.5pt minus 1pt}
+\setlength{\belowdisplayshortskip}{3.5pt plus 1.5pt minus 1pt}
+
+\newtheoremstyle{entheorem}
+  {7pt plus 2pt minus 2pt}
+  {7pt plus 2pt minus 2pt}
+  {\itshape}
+  {}
+  {\bfseries\sffamily\color{ink}}
+  {.}
+  {0.5em}
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textnormal{\sffamily(#3)}}}
+
+\newtheoremstyle{enremark}
+  {6pt plus 1.5pt minus 1.5pt}
+  {6pt plus 1.5pt minus 1.5pt}
+  {\normalfont}
+  {}
+  {\bfseries\sffamily\color{ink}}
+  {.}
+  {0.5em}
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+
+\theoremstyle{entheorem}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}[lemma]{Corollary}
+
+\theoremstyle{enremark}
+\newtheorem*{remark}{Remark}
+
+\renewcommand{\qedsymbol}{$\square$}
+\makeatletter
+\renewenvironment{proof}[1][\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont\topsep5\p@\@plus4\p@\relax
+  \trivlist
+  \item[\hskip\labelsep\bfseries\sffamily\color{ink}#1\@addpunct{.}]\ignorespaces
+}{%
+  \popQED\endtrivlist\@endpefalse
+}
+\makeatother
+
+\newsavebox{\accentstore}
+\newsavebox{\ideastore}
+
+\newenvironment{accentbox}[1]{%
+  \par\vspace{0.45em}\noindent
+  \begin{lrbox}{\accentstore}%
+    \begin{minipage}{\dimexpr\linewidth-23pt\relax}%
+      \vspace{8pt}%
+      \setlength{\parskip}{0.45em}%
+      {\normalsize\bfseries\sffamily\color{ink}#1}\par\vspace{2pt}%
+}{%
+      \vspace{8pt}%
+    \end{minipage}%
+  \end{lrbox}%
+  \setlength{\fboxsep}{0pt}%
+  \colorbox{boxbg}{%
+    \hbox to \linewidth{%
+      {\color{ink}\vrule width 3pt}%
+      \hspace{10pt}%
+      \usebox{\accentstore}%
+      \hspace{10pt}%
+    }%
+  }%
+  \par\vspace{0.55em}%
+}
+
+\newenvironment{ideabox}[1][Proof Idea]{%
+  \par\vspace{0.35em}\noindent
+  \begin{lrbox}{\ideastore}%
+    \begin{minipage}{\dimexpr\linewidth-11pt\relax}%
+      \small\setlength{\parskip}{0.35em}%
+      {\bfseries\sffamily\color{ink}#1.}\enspace
+}{%
+    \end{minipage}%
+  \end{lrbox}%
+  \hbox to \linewidth{%
+    {\color{rulegray}\vrule width 2pt}%
+    \hspace{9pt}%
+    \usebox{\ideastore}%
+  }%
+  \par\vspace{0.45em}%
+}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\de}{\delta}
+\newcommand{\stephead}[1]{\par\vspace{0.35em}\noindent{\bfseries\sffamily\color{ink}#1}\enspace}
+
+\begin{document}
+
+{\LARGE\bfseries\sffamily\color{ink}Surjectivity and Logarithmic Deviation of OEIS A377090}\par
+\vspace{0.35em}
+{\normalsize\sffamily Qingzhen Hu \quad---\quad November 2026}\par
+\vspace{0.5em}
+
+\noindent{\small\textbf{\sffamily\color{ink}Abstract.}\enspace
+The integer sequence \href{https://oeis.org/A377090}{OEIS A377090} starts at $a_0 = 0$ and selects at each step $n \ge 1$ the unvisited integer $a_n$ of smallest absolute value whose distance $|a_n - a_{n-1}|$ from the previous term is prime, breaking ties in favor of the positive candidate. N.~J.~A.~Sloane conjectured on April~30, 2025 that this greedy walk visits every integer, while M.~F.~Hasler conjectured in February~2025 that $\de_n := \bigl||a_n| - n/2\bigr| = O(\log n)$ and specifically $\de_n < 2\log(n+2)$ for all $n \ge 0$ (verified up to $n \le 10^5$). We prove unconditionally that Sloane's surjectivity conjecture holds, with a quantitative prefix coverage lower bound $k_n \ge c_1 n / (\log n)^4$, whereas Hasler's logarithmic bound fails infinitely often: $\limsup_{n\to\infty}\de_n/\log(n+2) = \infty$. We also certify using exact rational arithmetic that the earliest counterexample to $\de_n < 2\log(n+2)$ occurs at $n = 370313$, where $a_n = -185183$ and $\de_n = 26.5$. Throughout this paper, $\log$ denotes the natural logarithm. The proofs of Theorems~\ref{thm:ergodic}, \ref{thm:prefix}, and the asymptotic part of Theorem~\ref{thm:gap} are purely analytic and combinatorial, relying on no numerical computation.}
+
+\begin{accentbox}{Main Results}
+\begin{theorem}[Surjectivity onto $\Z$]\label{thm:ergodic}
+Every integer appears in \textup{A377090} exactly once; that is, $V := \{a_n : n \ge 0\} = \Z$.
+\end{theorem}
+
+\begin{theorem}[Quantitative Prefix Coverage]\label{thm:prefix}
+For $n \ge 0$, set $S_n := \{a_0, \ldots, a_n\}$ and $k_n := \min\{|h| : h \in \Z \setminus S_n\}$. There exists an absolute constant $c_1 > 0$ such that for all sufficiently large $n$,
+\begin{equation}\label{eq:kn-bound}
+  k_n \ge \frac{c_1 n}{(\log n)^4}.
+\end{equation}
+This estimate independently implies Theorem~\ref{thm:ergodic} and shows that every nonzero integer $h$ appears by step $O\bigl(|h|(\log(|h|+2))^4\bigr)$.
+\end{theorem}
+
+\begin{theorem}[Unbounded Logarithmic Ratio and First Counterexample]\label{thm:gap}
+For any pair of consecutive primes $p < q$, let $D := \max_{p \le n \le q}\de_n$. Then
+\begin{equation}\label{eq:gap-lower}
+  D \ge \frac{q-p}{8}.
+\end{equation}
+Consequently,
+\[
+  \limsup_{n\to\infty}\frac{\de_n}{\log(n+2)} = \infty,
+\]
+so every fixed constant multiple of $\log(n+2)$ fails infinitely often. Specifically, the earliest failure of $\de_n < 2\log(n+2)$ occurs at
+\[
+  n = 370313,\qquad a_n = -185183,\qquad \de_n = 26.5 > 2\log(370315) \approx 25.64421855.
+\]
+\end{theorem}
+\end{accentbox}
+
+\section{Preliminaries: Greedy Barrier and Binary Goldbach Lower Bounds}
+
+Because there are infinitely many primes, any finite prefix leaves infinitely many integers at prime distance from the current term. Thus the greedy walk never terminates and produces an infinite sequence $\{a_n\}_{n \ge 0}$ of pairwise distinct integers. Since every bounded interval of integers is finite, the walk can visit any bounded interval only finitely many times, whence
+\[
+  |a_n| \longrightarrow \infty \qquad (n \to \infty).
+\]
+
+\begin{lemma}[Omitted-Point Neighborhood Bound]\label{lem:missed}
+Let $\PP$ denote the set of primes, $V := \{a_n : n \ge 0\}$, and $N(b) := \{y \in \Z : |y - b| \in \PP\}$ for each $b \in \Z$. If $b \notin V$, then
+\begin{equation}\label{eq:missed-bound}
+  \#\bigl(N(b) \cap V\bigr) \le 2|b|.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Suppose $b \notin V$. Whenever $a_j \in N(b)$, the integer $b$ is still unvisited after step $j$ and satisfies $|a_j - b| \in \PP$, making $b$ an eligible candidate for $a_{j+1}$. By the greedy rule, $|a_{j+1}| \le |b|$. Because $b \notin V$ and all terms of the sequence are distinct, the successor map $a_j \mapsto a_{j+1}$ injects $N(b) \cap V$ into the finite integer set
+\[
+  [-|b|, |b|] \cap \Z \setminus \{b\},
+\]
+which has cardinality exactly $2|b|$. Hence $\#\bigl(N(b) \cap V\bigr) \le 2|b|$.
+\end{proof}
+
+\begin{remark}
+Since $a_0 = 0$ cannot occur as a successor $a_{j+1}$, the bound sharpens to $2|b|-1$ for $b \ne 0$. Notice also that Lemma~\ref{lem:missed} does not depend on the sign tie-breaking rule. In particular, whenever $b \notin V$, both $b+p$ and $b-p$ fail to belong to $V$ for all but finitely many primes $p$.
+\end{remark}
+
+\begin{lemma}[Uniform Binary Goldbach Lower Bound]\label{lem:goldbach}
+For each positive integer $m$, let $r(m) := \#\{(u,v) \in \PP^2 : u + v = m\}$ count ordered prime-pair representations of $m$. There exists an absolute constant $c > 0$ such that, for every fixed $A > 0$ and all sufficiently large $X$, all even integers $m \in [X/2, X]$ except at most $O_A\bigl(X/(\log X)^A\bigr)$ satisfy
+\begin{equation}\label{eq:goldbach-lb}
+  r(m) \ge \frac{cX}{(\log X)^2}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By the classical mean-square estimate of Chudakov, van der Corput, and Estermann for binary Goldbach representations (see Vaughan~\cite{vaughan1972}, p.~22), for every fixed $B > 0$ we have
+\[
+  \sum_{\substack{m \le X \\ 2 \mid m}} \bigl|r(m) - J(m)\mathfrak{S}(m)\bigr|^2 \ll_B \frac{X^3}{(\log X)^B},
+\]
+where $\mathfrak{S}(m) = 0$ for odd $m$ (so restricting to even $m$ is immediate) and
+\[
+  J(m) := \sum_{\substack{u+v=m \\ u,v \ge 2}} (\log u \log v)^{-1}.
+\]
+For every even $m \in [X/2, X]$, there are $\gg X$ pairs $(u,v)$ with $u+v=m$ and $u,v \ge X/8$, giving $J(m) \gg X/(\log X)^2$ uniformly on $[X/2, X]$. Meanwhile, the singular series for even $m$ satisfies the uniform positive lower bound
+\[
+  \mathfrak{S}(m) = 2\prod_{p>2}\left(1 - \frac{1}{(p-1)^2}\right)\prod_{\substack{p \mid m \\ p>2}}\frac{p-1}{p-2} \ge 2\prod_{p>2}\left(1 - \frac{1}{(p-1)^2}\right) > 0,
+\]
+with products over odd primes (the factor $2$ accounts for ordered pairs). Hence there exists an absolute constant $c_0 > 0$ such that $J(m)\mathfrak{S}(m) \ge 2c_0 X/(\log X)^2$ for all sufficiently large $X$ and all even $m \in [X/2, X]$. Setting $c := c_0$ (independent of $A$), each even $m \in [X/2, X]$ violating~\eqref{eq:goldbach-lb} contributes at least $\bigl(cX/(\log X)^2\bigr)^2 \gg X^2/(\log X)^4$ to the mean-square sum. Taking $B := A + 4$ shows that at most $O_A\bigl(X/(\log X)^A\bigr)$ exceptional even integers can occur in $[X/2, X]$.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:ergodic}: Two-Hop Goldbach Bridges and Infinite Descent}
+
+\begin{ideabox}
+Suppose for contradiction that some integer is permanently omitted. Lemma~\ref{lem:missed} lets us fix two omitted integers $h_0, h_1$ of opposite parity. Given any integer $t$ with $|t|$ large, we choose $h \in \{h_0, h_1\}$ of opposite parity to $t$, put $X = |t - h|$, and move one small prime step $p \le H = \lfloor X/(\log X)^3\rfloor$ toward $t$ to reach a new omitted point $b$. Because $|b| \approx H$, Lemma~\ref{lem:missed} caps the visited neighbors of $b$ at $2|b| \ll X/(\log X)^3$, whereas Lemma~\ref{lem:goldbach} produces $\gg X/(\log X)^2$ two-prime bridges $z$ connecting $b$ and $t$. The extra $\log X$ factor breaks through the greedy barrier, forcing a permanently omitted neighbor $z$ of $t$ with $|z| < |t|$.
+\end{ideabox}
+
+\begin{proof}[Proof of Theorem~\ref{thm:ergodic}]
+Assume for contradiction that $\Z \setminus V \ne \emptyset$. Pick any omitted integer; by Lemma~\ref{lem:missed}, adding any sufficiently large odd prime produces another omitted integer. Thus we may fix two permanently omitted integers $h_0, h_1 \in \Z \setminus V$ with $h_0 \equiv 0 \pmod 2$ and $h_1 \equiv 1 \pmod 2$.
+
+Let $t \in \Z$ have sufficiently large absolute value, and choose $h \in \{h_0, h_1\}$ of opposite parity to $t$. Define
+\[
+  s := \operatorname{sgn}(t - h) \in \{\pm 1\},\qquad X := |t - h|,\qquad H := \left\lfloor \frac{X}{(\log X)^3} \right\rfloor.
+\]
+Since $t$ and $h$ have opposite parity, $X$ is a positive odd integer and $t = h + sX$.
+
+\stephead{Step 1: Choosing the first prime hop $p$.}
+For every odd prime $p \le H$, when $X$ is sufficiently large we have $H \le X/2$, so $X - p$ is an even integer in $[X/2, X]$. By the prime number theorem, there are $\gg H/\log H \gg X/(\log X)^4$ such primes $p \le H$. We exclude two classes of primes:
+\begin{enumerate}[label=(\arabic*), leftmargin=2.2em, itemsep=2pt, topsep=2pt]
+  \item primes $p$ for which $h + sp \in V$: since $h \notin V$ and $h + sp \in N(h)$, Lemma~\ref{lem:missed} limits these to at most $2|h|$;
+  \item primes $p$ for which $X - p$ violates~\eqref{eq:goldbach-lb}: as the integers $X - p$ are distinct even numbers in $[X/2, X]$, Lemma~\ref{lem:goldbach} with $A = 6$ limits these to at most $O\bigl(X/(\log X)^6\bigr)$.
+\end{enumerate}
+Together, at most $2|h| + O\bigl(X/(\log X)^6\bigr) = o\bigl(X/(\log X)^4\bigr)$ primes are excluded. Hence, for sufficiently large $|t|$ (and thus sufficiently large $X$), there exists an odd prime $p \le H$ such that
+\[
+  b := h + sp \notin V \qquad\text{and}\qquad r(X - p) \ge \frac{cX}{(\log X)^2}.
+\]
+
+\stephead{Step 2: Building common neighbors and infinite descent.}
+Each ordered prime representation $X - p = u + v$ ($u, v \in \PP$) defines an integer
+\[
+  z := b + su = t - sv.
+\]
+Then $|z - b| = u \in \PP$ and $|t - z| = v \in \PP$, so $z \in N(b) \cap N(t)$. Because $p, u, v > 0$, the points $h, b, z, t$ appear in strictly monotonic order along the direction $s$ from $h$ toward $t$. Moreover, distinct ordered pairs $(u, v)$ have distinct first coordinates $u$ and hence produce distinct integers $z$, yielding at least $r(X - p) \ge cX/(\log X)^2$ candidates $z$. On the other hand, since $b \notin V$, Lemma~\ref{lem:missed} gives
+\[
+  \#\bigl(N(b) \cap V\bigr) \le 2|b| \le 2|h| + 2H \le 2|h| + \frac{2X}{(\log X)^3} < \frac{cX}{(\log X)^2}
+\]
+for all sufficiently large $X$. Consequently, at least one of these integers $z$ lies outside $V$. Since $|t| > |h|$ for large $|t|$ and $z$ lies strictly between $h$ and $t$, it follows that $|z| < |t|$.
+
+Because $\{h_0, h_1\}$ is fixed, we can choose a single threshold $T_0 > 0$ valid for both parities of $t$ whenever $|t| \ge T_0$. Since $|a_n| \to \infty$, there exists $N_0$ such that $|a_n| \ge T_0$ for all $n \ge N_0$. Applying the construction to $t = a_n$ ($n \ge N_0$) yields an unvisited neighbor $z \in N(a_n) \setminus V$ with $|z| < |a_n|$, which is still available at step $n + 1$. The greedy rule forces
+\[
+  |a_{n+1}| \le |z| < |a_n| \qquad (\forall\, n \ge N_0).
+\]
+Thus $\{|a_n|\}_{n \ge N_0}$ would be an infinite strictly decreasing sequence of nonnegative integers, a contradiction. Therefore $V = \Z$, and pairwise distinctness completes the proof.
+\end{proof}
+
+\section{Independent Proof of Theorem~\ref{thm:prefix}: Quantitative Prefix Coverage}
+
+Throughout this section we work strictly inside a finite prefix $S := S_n = \{a_0, \ldots, a_n\}$ ($n \ge 2$) without appealing to Theorem~\ref{thm:ergodic}. Thus the proof below both quantifies the coverage rate and provides a self-contained alternative proof of surjectivity.
+
+\begin{lemma}[Control of the Maximum Prefix Radius]\label{lem:max-radius}
+For $n \ge 2$, let $M := \max_{y \in S} |y|$. Then
+\begin{equation}\label{eq:M-bound}
+  \frac{n}{2} \le M \ll n\log(2n), \qquad L := \log(2M) \asymp \log(2n).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Since $S \subseteq [-M, M] \cap \Z$ contains $n + 1$ distinct integers, $2M + 1 \ge n + 1$, so $M \ge n/2$. As $n \ge 2$, we have $M \ge 1 > |a_0|$. Let $a_{j_0}$ ($1 \le j_0 \le n$) be the first term in $S$ with $|a_{j_0}| = M$, and let $y := a_{j_0-1}$ be its predecessor, so $0 \le |y| \le M - 1$. Set $s = 1$ if $y \ge 0$ and $s = -1$ if $y < 0$. For every prime $p \le M - 1$, define $w_p := y - sp$; then $|w_p| = \bigl||y| - p\bigr| < M$ and $|y - w_p| = p \in \PP$. If some prime $p \le M - 1$ gave $w_p \notin \{a_0, \ldots, a_{j_0-1}\}$, then $w_p$ would be an eligible candidate at step $j_0$ with $|w_p| < M = |a_{j_0}|$, contradicting the greedy rule. Hence the distinct integers $w_p$ ($p \le M - 1$) all lie in $\{a_0, \ldots, a_{j_0-1}\} \subseteq S \setminus \{a_{j_0}\}$. Therefore $\pi(M - 1) \le n$, which by the prime number theorem gives $M \ll n\log(2n)$. Combined with $M \ge n/2$, this implies $L = \log(2M) \asymp \log(2n)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:prefix}]
+Assume $n$ is sufficiently large, put $k := k_n = \min\{|h| : h \in \Z \setminus S\}$, and let $M, L$ be as in Lemma~\ref{lem:max-radius}.
+
+\stephead{Step 1: Two prefix-omitted points of opposite parity.}
+For any $h \in \Z \setminus S$, repeating the proof of Lemma~\ref{lem:missed} for indices $j < n$ with $a_j \in N(h) \cap S$ shows that $a_{j+1} \in [-|h|, |h|] \cap \Z \setminus \{h\}$. Allowing for the final term $a_n$, we obtain
+\begin{equation}\label{eq:prefix-missed}
+  \#\bigl(N(h) \cap S\bigr) \le 2|h| + 1.
+\end{equation}
+Choose $h \in \Z \setminus S$ with $|h| = k$. Among the smallest $2k + 2$ odd primes,~\eqref{eq:prefix-missed} allows at most $2k + 1$ primes $p$ with $h + p \in S$, so at least one odd prime $p$ satisfies $h' := h + p \notin S$. Then $h$ and $h'$ have opposite parity. Since the $j$-th prime is $O(j\log(2j))$, setting $K := \max(1, |h|, |h'|)$ yields
+\[
+  K \ll (k + 1)\log(2k + 2).
+\]
+
+\stephead{Step 2: Dyadic exceptional set and $3/4$-contraction steps.}
+Consider even integers $m \in [1, 2M]$. Treat all even $m \le \sqrt{M}$ as exceptional, and cover $(\sqrt{M}, 2M]$ by dyadic intervals $(X_i/2, X_i]$ with $X_i := 2M/2^i > \sqrt{M}$. Applying Lemma~\ref{lem:goldbach} with $A = 4$ on each dyadic interval (where $\log X_i \asymp \log(2M) = L$ and $\log X_i \le L$), the total number of exceptional even integers across $(\sqrt{M}, 2M]$ is $\sum_{X_i > \sqrt{M}} O(X_i/L^4) = O(M/L^4)$, and $m \le \sqrt{M}$ adds only $O(\sqrt{M}) = o(M/L^4)$. Thus every non-exceptional even integer $m \in (X_i/2, X_i] \subseteq (\sqrt{M}, 2M]$ satisfies
+\[
+  r(m) \ge \frac{cX_i}{(\log X_i)^2} \ge \frac{cm}{L^2}.
+\]
+Fix an absolute constant $C \ge 6$ large enough that $\frac{1}{2}cC > 4$ and $\frac{cT}{2L^2} = \frac{1}{2}cC(K + 1) > 4K + 2$ for large $n$, where
+\[
+  T := C(K + 1)L^2.
+\]
+Let $x := a_j$ be any starting term with $j < n$ and $|x| \ge T$ (if $T > M$, no such index $j$ exists and Step~3 holds trivially). Pick $b \in \{h, h'\}$ of the same parity as $x$. Because $|b| \le K < T \le |x| \le M$, the difference $m := |x - b|$ is a positive even integer satisfying
+\[
+  \frac{|x|}{2} \le |x| - K < m \le |x| + K < 2|x| \le 2M,
+\]
+and in particular $m \ge T/2$. If $m$ is non-exceptional, then $r(m) > 4K + 2$. Let $U(m)$ denote the number of \textbf{unordered} prime pairs $\{u, v\}$ with $u + v = m$. Since at most one diagonal pair $u = v = m/2$ can occur, $r(m) \le 2U(m)$, so $U(m) > 2K + 1$. Taking the smaller summand $u \le m/2$ from each unordered pair gives more than $2K + 1$ distinct integers
+\[
+  z := b + \operatorname{sgn}(x - b)u.
+\]
+Each $z$ satisfies $|z - b| = u \in \PP$ and $|x - z| = v \in \PP$, so $z \in N(b) \cap N(x)$. By~\eqref{eq:prefix-missed}, $\#\bigl(N(b) \cap S\bigr) \le 2|b| + 1 \le 2K + 1$, so at least one such $z$ lies in $\Z \setminus S$. Being eligible at step $j + 1$, this $z$ forces
+\[
+  |a_{j+1}| \le |z| \le |b| + \frac{m}{2} \le K + \frac{|x| + K}{2} = \frac{|x|}{2} + \frac{3K}{2} \le \frac{3}{4}|x|,
+\]
+where the final inequality uses $|x| \ge T \ge 6K$.
+
+\stephead{Step 3: Segmenting by exceptional steps.}
+Call a starting index $j \in \{0, \ldots, n - 1\}$ \emph{exceptional} if either $|a_j| < T$ or $m = |a_j - b|$ belongs to the exceptional set above. Distinctness allows at most $2T + 1 = O(T)$ indices with $|a_j| < T$. Furthermore, each exceptional even $m \in [1, 2M]$ corresponds to at most four integers $x \in \{h \pm m, h' \pm m\}$, contributing at most $O(M/L^4)$ exceptional indices. Between any two consecutive exceptional indices, every step shrinks the absolute value by a factor of at most $3/4$; starting from $|a_j| \le M$ while staying at least $T \ge 1$, such a contracting run has length at most $\log_{4/3} M + 1 = O(L)$. Counting all $n$ steps by runs between exceptional indices yields
+\[
+  n \ll \left(1 + T + \frac{M}{L^4}\right) L \ll (K + 1)L^3 + \frac{M}{L^3}.
+\]
+By Lemma~\ref{lem:max-radius}, $M/L^3 \ll n\log(2n)/(\log(2n))^3 = o(n)$, so for sufficiently large $n$ the $M/L^3$ term is absorbed into the left-hand side, leaving $n \ll (K + 1)L^3$. Since $[-(k - 1), k - 1] \cap \Z \subseteq S$, we have $2k - 1 \le n + 1$, hence $k \le n/2 + 1$ and $\log(2k + 2) \ll \log(2n)$. Thus $K + 1 \ll (k + 1)\log(2n)$. Multiplying by $L^3 \asymp (\log n)^3$ and rearranging gives~\eqref{eq:kn-bound}. In particular $k_n \to \infty$, proving $\bigcup_{n \ge 0} S_n = \Z$, and choosing $n$ so that $c_1 n/(\log n)^4 > |h|$ places any nonzero $h$ within the first $O\bigl(|h|(\log(|h|+2))^4\bigr)$ terms.
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:gap}: Long Prime Gaps and Breakdown of Logarithmic Bounds}
+
+\begin{ideabox}[Mechanism]
+When $n$ lies deep inside a long prime gap $(p, q)$ and the deviation $\de_n$ stays small, the distance required to jump across zero from one half-line to the other is approximately $2(n/2) = n$, which falls inside $(p, q)$ where no primes exist. Trapped on a single sign for many consecutive indices, the sequence packs too many distinct integers into too narrow an interval of absolute values, forcing $\de_n$ to exceed $(q - p)/8$ by the pigeonhole principle.
+\end{ideabox}
+
+\begin{lemma}[Explicit Prime-Gap Lower Bound]\label{lem:prime-gap}
+Let $\{a_n\}_{n \ge 0}$ be any sequence of pairwise distinct integers satisfying $|a_{n+1} - a_n| \in \PP$ for all $n \ge 0$, and put $\de_n := \bigl||a_n| - n/2\bigr|$. For any consecutive primes $p < q$, setting $D := \max_{p \le n \le q}\de_n$, we have
+\[
+  D \ge \frac{q - p}{8}.
+\]
+\end{lemma}
+
+\begin{proof}
+Since $2\de_n = \bigl|2|a_n| - n\bigr| \in \Z_{\ge 0}$ for every $n$, the quantity $2D$ is a nonnegative integer. Put
+\[
+  L := p + 2D, \qquad U := q - 2D.
+\]
+If $L \ge U$, then $q - p \le 4D$ and the bound holds. Suppose now that $L < U$. For every integer $i$ with $L \le i < U$, using $\de_i, \de_{i+1} \le D$ together with $L \le i \le U - 1$, we obtain
+\[
+  p < i + \tfrac{1}{2} - 2D = \bigl(\tfrac{i}{2} - D\bigr) + \bigl(\tfrac{i+1}{2} - D\bigr)
+  \le |a_i| + |a_{i+1}|
+  \le \bigl(\tfrac{i}{2} + D\bigr) + \bigl(\tfrac{i+1}{2} + D\bigr) = i + \tfrac{1}{2} + 2D < q,
+\]
+since the left endpoint is at least $p + \frac{1}{2} > p$ and the right endpoint is at most $q - \frac{1}{2} < q$. If $a_k = 0$ for some $L \le k \le U$, or if $a_i$ and $a_{i+1}$ have opposite signs for some $L \le i < U$, then the corresponding prime step equals $|a_i| + |a_{i+1}|$ (pairing $a_k = 0$ with an adjacent term inside $[L, U]$) and thus lies strictly between consecutive primes $p$ and $q$, a contradiction. (For \textup{A377090} itself, $a_0 = 0$, distinctness, and $L \ge p \ge 2$ also rule out $a_k = 0$ directly.)
+
+Hence $a_L, a_{L+1}, \ldots, a_U$ are all nonzero and share the same sign. Their absolute values $|a_L|, \ldots, |a_U|$ therefore form $U - L + 1$ pairwise distinct integers contained in the real interval $[L/2 - D,\, U/2 + D]$. Comparing the span of $U - L + 1$ distinct integers against the length of this interval yields
+\[
+  U - L \le \left(\frac{U}{2} + D\right) - \left(\frac{L}{2} - D\right) = \frac{U - L}{2} + 2D,
+\]
+so $U - L \le 4D$. Substituting $U - L = q - p - 4D$ gives $q - p \le 8D$, establishing~\eqref{eq:gap-lower}.
+\end{proof}
+
+\begin{corollary}[Unbounded Logarithmic Ratio]\label{cor:limsup-inf}
+For \textup{A377090}, we have $\limsup_{n\to\infty}\de_n/\log(n+2) = \infty$.
+\end{corollary}
+
+\begin{proof}
+By Westzynthius's large prime-gap theorem~\cite{westzynthius1931} (see also Ford, Green, Konyagin, and Tao~\cite{fgkt2016}, pp.~935--936), there exists an infinite sequence of consecutive primes $p < q$ with $(q - p)/\log p \to \infty$. By Bertrand's postulate, $q < 2p$. Choosing an index $n \in [p, q]$ attaining $D = \max_{p \le m \le q} \de_m$ and applying Lemma~\ref{lem:prime-gap} with $n \le q < 2p$, we get
+\[
+  \frac{\de_n}{\log(n+2)} \ge \frac{D}{\log(q+2)} \ge \frac{q - p}{8\log(q+2)} \ge \frac{q - p}{8\log(2p+2)} \longrightarrow \infty.
+\]
+This completes the asymptotic part of Theorem~\ref{thm:gap}.
+\end{proof}
+
+\section{Computational Certification of the Earliest Counterexample}
+
+To identify the earliest index violating Hasler's inequality $\de_n < 2\log(n+2)$, we generated \textup{A377090} from $a_0 = 0$ using two independent programs: one based on the sieve of Eratosthenes and the accompanying script \texttt{verify\_a377090.py} using cached exact trial division. Both implementations match term-for-term over $0 \le n \le 370340$ ($370\,341$ terms) and agree identically with the OEIS b-file \texttt{b377090.txt}~\cite{oeis_a377090} over $0 \le n \le 10000$ ($10\,001$ terms). The earliest violation occurs at
+\[
+  n = 370313,\quad a_n = -185183,\quad \de_n = 185183 - 185156.5 = 26.5 > 2\log(370315) \approx 25.64421855.
+\]
+
+\stephead{Floating-point-free certification of minimality.}
+In \texttt{verify\_a377090.py}, unvisited integers are scanned in the canonical order $0, +1, -1, +2, -2, \ldots$ Put $d_n := |2|a_n| - n| = 2\de_n \in \Z_{\ge 0}$, so $\de_n < 2\log(n+2)$ is equivalent to $e^{d_n} < (n+2)^4$. Because $(n+2)^4$ is strictly increasing in $n$, if a nonnegative integer value $d$ satisfies $e^d < (n+2)^4$ at its \textbf{earliest} index of occurrence, then every subsequent occurrence of $d$ automatically satisfies the inequality. Thus it suffices to test only the first index $n$ at which each distinct $d$ appears. Using exact rational Taylor bounds for $e$,
+\[
+  \mathrm{lo} := \sum_{k=0}^{10}\frac{1}{k!} < e < \mathrm{lo} + \frac{1}{10\cdot 10!} =: \mathrm{hi},
+\]
+the script checks $\mathrm{hi}^d < (n+2)^4$ or $\mathrm{lo}^d \ge (n+2)^4$ in exact fraction arithmetic (which for $d \ge 1$ certifies strict inequality $e^d > (n+2)^4$), eliminating floating-point rounding from the determination of the earliest counterexample.
+
+\stephead{Prime-gap mechanism in action.}
+In agreement with Lemma~\ref{lem:prime-gap}, the earliest counterexample $n = 370313$ sits near the center of the large prime gap $[p, q] = [370261, 370373]$ of width $q - p = 112$. Across the entire interval $[370261, 370373]$, the sequence changes sign only once, at $n = 370317 \to 370318$: all $57$ terms for $370261 \le n \le 370317$ remain negative until the walk jumps across zero by the exact prime step $q = 370373$, after which all $56$ terms for $370318 \le n \le 370373$ remain positive. The peak deviation on this gap is $D = 28.0 = (q - p)/4$ (attained at $n = 370314, 370318, 370320, 370322$), twice the general lower bound $(q - p)/8 = 14$ of Lemma~\ref{lem:prime-gap}. Key trajectory milestones around $n = 370313$ are listed in Table~\ref{tab:counterexample}.
+
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\caption{Key terms around the earliest counterexample inside the prime gap $[370261, 370373]$}
+\label{tab:counterexample}
+\vspace{4pt}
+\begin{tabular}{@{}rrrrrl@{}}
+\toprule
+Index $n$ & Term $a_n$ & Step $|a_n - a_{n-1}|$ & Deviation $\de_n$ & Bound $2\log(n+2)$ & Feature \\
+\midrule
+$370309$ & $-185180$ & $2$      & $25.5$ & $25.64419694$ & Closest prior near-miss \\
+$370312$ & $-185181$ & $2$      & $25.0$ & $25.64421315$ & Preceding term \\
+$370313$ & $-185183$ & $2$      & $26.5$ & $25.64421855$ & \textbf{First violation} \\
+$370314$ & $-185185$ & $2$      & $28.0$ & $25.64422395$ & Gap peak attained \\
+$370317$ & $-185186$ & $2$      & $27.5$ & $25.64424015$ & Last negative term in gap \\
+$370318$ & $+185187$ & $370373$ & $28.0$ & $25.64424555$ & Sign flip (step $= q$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section*{Acknowledgments and AI Disclosure}
+
+This work was initiated, curated, and released by Qingzhen Hu. In the spirit of full transparency, the proof constructions, English exposition, \LaTeX{} typesetting, and computational verification scripts were generated with AI assistance throughout. All analytic and combinatorial arguments in the manuscript are self-contained and formally verifiable line by line, and the earliest numerical counterexample is independently certified in exact rational arithmetic by the accompanying script \texttt{verify\_a377090.py}.
+
+\begin{thebibliography}{9}
+\small\raggedright
+\setlength{\itemsep}{3pt}
+\bibitem{oeis_a377090}
+OEIS Foundation Inc., \textit{Entry A377090 in The On-Line Encyclopedia of Integer Sequences} (created by R.~Sigrist, with comments by N.~J.~A.~Sloane and M.~F.~Hasler, and b-file \href{https://oeis.org/A377090/b377090.txt}{b377090.txt} by P.~Xausa), \url{https://oeis.org/A377090}.
+
+\bibitem{vaughan1972}
+R.~C.~Vaughan, \textit{On Goldbach's problem}, Acta Arith.~\textbf{22} (1972), 21--48 (p.~22), \url{https://matwbn.icm.edu.pl/ksiazki/aa/aa22/aa2213.pdf}.
+
+\bibitem{westzynthius1931}
+E.~Westzynthius, \textit{\"Uber die Verteilung der Zahlen, die zu den $n$ ersten Primzahlen teilerfremd sind}, Comment. Phys.-Math. Soc. Sci. Fenn.~\textbf{5} (1931), 1--37.
+
+\bibitem{fgkt2016}
+K.~Ford, B.~Green, S.~Konyagin, and T.~Tao, \textit{Large gaps between consecutive prime numbers}, Ann. of Math.~(2)~\textbf{183} (2016), 935--974 (pp.~935--936), \url{https://annals.math.princeton.edu/wp-content/uploads/annals-v183-n3-p04-p.pdf}.
+\end{thebibliography}
+
+\end{document}
