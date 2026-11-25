@@ -407,7 +407,7 @@ $370318$ & $+185187$ & $370373$ & $28.0$ & $25.64424555$ & Sign flip (step $= q$
 
 \section*{Acknowledgments and AI Disclosure}
 
-This work was initiated, curated, and released by Qingzhen Hu. In the spirit of full transparency, the proof constructions, English exposition, \LaTeX{} typesetting, and computational verification scripts were generated with AI assistance throughout. All arguments in the manuscript are written out in full and can be verified line by line (relying only on standard cited theorems from analytic number theory), and the earliest numerical counterexample is independently certified in exact rational arithmetic by the accompanying script \texttt{verify\_a377090.py}.
+This work was initiated, curated, and released by Qingzhen Hu. In the spirit of full transparency, the proof constructions, English exposition, \LaTeX{} typesetting, Lean~4 formalization, and computational verification scripts were generated with AI assistance throughout. All arguments in the manuscript are written out in full and can be verified line by line (relying only on standard cited theorems from analytic number theory), and the earliest numerical counterexample is independently certified in exact rational arithmetic by the accompanying script \texttt{verify\_a377090.py}. In addition, a complete Lean~4 + Mathlib4 (\texttt{v4.36.0}) formalization under \texttt{formalization/} verifies the proofs with zero \texttt{sorry}s and zero custom axioms, proving Chebyshev's bounds and Bertrand's postulate internally while isolating only the Chudakov--van der Corput--Estermann Goldbach mean-square estimate and Westzynthius's prime-gap theorem as explicit typed inputs.
 
 \begin{thebibliography}{9}
 \small\raggedright

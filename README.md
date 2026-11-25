@@ -41,6 +41,7 @@ The earliest violation lies inside the large prime gap $[p, q] = [370261, 370373
 
 ## Repository Contents
 
+- [`formalization/`](formalization/) — Complete Lean 4 + Mathlib4 (`v4.36.0`) formalization (zero `sorry`, zero custom `axiom` declarations, zero `native_decide`).
 - [`paper/A377090_Surjectivity_and_Logarithmic_Deviation.pdf`](paper/A377090_Surjectivity_and_Logarithmic_Deviation.pdf) — Full 7-page English manuscript with complete proofs and tables.
 - [`paper/a377090_proof.tex`](paper/a377090_proof.tex) — Portable LaTeX source (`article` class; compiles cleanly with `pdflatex`, `xelatex`, `lualatex`, or `tectonic`).
 - [`verify_a377090.py`](verify_a377090.py) — Standalone Python 3 verification script using exact trial division and rational Taylor bounds for $e$ (no floating-point rounding in inequality checks).
@@ -75,6 +76,31 @@ tectonic a377090_proof.tex
 # or: pdflatex a377090_proof.tex && pdflatex a377090_proof.tex
 ```
 
+## Lean 4 Formalization
+
+A machine-checked **Lean 4.36.0 + Mathlib4 (`v4.36.0`)** formalization is provided in [`formalization/`](formalization/), with **zero `sorry`s**, **zero custom `axiom` declarations**, and **zero `native_decide`**.
+
+Because Mathlib `v4.36.0` already includes `Chebyshev.pi_ge` and Bertrand's postulate (`Nat.exists_prime_lt_and_le_two_mul`), Chebyshev prime-counting bounds and Bertrand's postulate are proved internally inside Lean. Only two external theorems from analytic number theory are represented as explicit typed `structure` hypotheses (`GoldbachMeanSquareInput` and `WestzynthiusInput`):
+
+| Module | Proved Results | External Structure Hypothesis |
+|---|---|---|
+| [`A377090/Basic.lean`](formalization/A377090/Basic.lean) | Sequence definition `a377090`, injectivity, prime adjacent steps, divergence `|a(n)| → ∞`, Lemma 1.1 (`omitted_neighbors_card_le`) | None |
+| [`A377090/AnalyticInputs.lean`](formalization/A377090/AnalyticInputs.lean) | Bertrand's postulate, Chebyshev bounds, Lemma 1.2 (`goldbach_uniform_lower_bound`) | Defines `GoldbachMeanSquareInput`, `WestzynthiusInput` |
+| [`A377090/Surjectivity.lean`](formalization/A377090/Surjectivity.lean) | Theorem 1 (`a377090_surjective`, `a377090_bijective`) | `GoldbachMeanSquareInput` |
+| [`A377090/PrefixCoverage.lean`](formalization/A377090/PrefixCoverage.lean) | Lemma 3.1 (`maxPrefixRadius_bounds`), Theorem 2 (`prefix_coverage_lower_bound`), independent surjectivity (`a377090_surjective_of_prefix_coverage`) | `GoldbachMeanSquareInput` (independent of `Surjectivity.lean`) |
+| [`A377090/PrimeGaps.lean`](formalization/A377090/PrimeGaps.lean) | Lemma 4.1 (`prime_gap_deviation_lower_bound`) and Corollary 4.2 (`deviation_div_log_unbounded`) | None (Lemma 4.1); `WestzynthiusInput` (Corollary 4.2) |
+| [`A377090/Certification.lean`](formalization/A377090/Certification.lean) | Rational Taylor certification soundness, earliest-index monotonicity, certified violation at `n = 370313`, consecutive prime gap `[370261, 370373]` | None |
+
+To build and verify locally (using precompiled Mathlib `.olean` cache):
+
+```bash
+cd formalization
+lake exe cache get
+lake build
+```
+
+Running `#print axioms` on all exported main theorems confirms they depend solely on Lean's standard axioms `[propext, Classical.choice, Quot.sound]`.
+
 ## References
 
 - OEIS Foundation Inc., *Entry A377090*, https://oeis.org/A377090
@@ -84,4 +110,4 @@ tectonic a377090_proof.tex
 
 ## Acknowledgments and AI Disclosure
 
-This repository was initiated, curated, and released by **Qingzhen Hu**. The proof constructions, English exposition, LaTeX typesetting, and computational verification scripts were generated with AI assistance throughout. All arguments in the paper are written out in full and verifiable line by line (modulo standard cited results in analytic number theory), and the earliest numerical counterexample is certified independently in exact rational arithmetic via `verify_a377090.py`.
+This repository was initiated, curated, and released by **Qingzhen Hu**. The proof constructions, English exposition, LaTeX typesetting, Lean 4 formalization, and computational verification scripts were generated with AI assistance throughout. All arguments in the paper are written out in full and verifiable line by line (modulo standard cited results in analytic number theory); the earliest numerical counterexample is certified independently in exact rational arithmetic via `verify_a377090.py`, and the main theorems and certifications are formalized in Lean 4 + Mathlib4 under `formalization/`.

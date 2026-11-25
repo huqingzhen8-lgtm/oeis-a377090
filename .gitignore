@@ -9,6 +9,13 @@
 *.bbl
 *.blg
 
+# Lean 4 / Lake build artifacts and Mathlib cache
+**/.lake/
+*.olean
+*.ilean
+*.trace
+*.hash
+
 # Python cache
 __pycache__/
 *.py[cod]
